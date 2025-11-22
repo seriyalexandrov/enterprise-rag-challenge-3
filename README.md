@@ -1,7 +1,8 @@
-# Solution
+# Description
 
-This project is a solution for an [Enterprise RAG Challenge 3: Agentic AI in Action](https://www.timetoact-group.at/events/enterprise-rag-challenge-part-3)
+This project is a solution for an [Enterprise RAG Challenge 3: Agentic AI in Action](https://www.timetoact-group.at/events/enterprise-rag-challenge-part-3).
 This isn’t just a competition — it’s a crowdsourced research project exploring how agentic AI can solve real-world business challenges.
+There is a [sample demo agent available](https://github.com/trustbit/erc3-agents).
 
 ## Build and run
 

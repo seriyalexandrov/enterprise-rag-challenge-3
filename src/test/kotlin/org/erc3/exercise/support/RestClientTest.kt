@@ -1,6 +1,7 @@
 package org.erc3.exercise.support
 
 import org.erc3.exercise.adapter.outgoing.rest.client.RetrofitConfig
+import org.erc3.exercise.adapter.outgoing.rest.client.demobenchmark.DemoApiClient
 import org.erc3.exercise.adapter.outgoing.rest.client.someapi.SomeApiClient
 import org.erc3.exercise.adapter.outgoing.rest.client.someapi.SomeApiMapper
 import org.erc3.exercise.config.ObjectMapperConfig
@@ -19,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles
     classes = [
         ObjectMapperConfig::class,
         RetrofitConfig::class,
+        DemoApiClient::class,
         SomeApiClient::class,
         SomeApiMapper::class,
     ],

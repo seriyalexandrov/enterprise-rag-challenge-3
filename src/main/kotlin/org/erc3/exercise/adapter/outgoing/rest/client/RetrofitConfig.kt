@@ -2,6 +2,7 @@ package org.erc3.exercise.adapter.outgoing.rest.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.OkHttpClient
+import org.erc3.exercise.adapter.outgoing.rest.client.demobenchmark.DemoApi
 import org.erc3.exercise.adapter.outgoing.rest.client.someapi.SomeApi
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -26,6 +27,15 @@ class RetrofitConfig(
     fun someApi(): SomeApi =
         someApiProperties()
             .let { retrofit(it.baseUrl, it.timeout).create(SomeApi::class.java) }
+
+    @Bean
+    @ConfigurationProperties(prefix = "challenge.erc3.demo-api")
+    fun demoApiProperties(): RestApiClientProperties = RestApiClientProperties()
+
+    @Bean
+    fun demoApi(): DemoApi =
+        demoApiProperties()
+            .let { retrofit(it.baseUrl, it.timeout).create(DemoApi::class.java) }
 
     private fun retrofit(baseUrl: String, timeout: Duration): Retrofit {
         val client = okHttpClient(timeout)
