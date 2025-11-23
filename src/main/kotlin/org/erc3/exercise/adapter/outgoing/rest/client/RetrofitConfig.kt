@@ -2,8 +2,9 @@ package org.erc3.exercise.adapter.outgoing.rest.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.OkHttpClient
-import org.erc3.exercise.adapter.outgoing.rest.client.demobenchmark.DemoApi
-import org.erc3.exercise.adapter.outgoing.rest.client.someapi.SomeApi
+import org.erc3.exercise.adapter.outgoing.rest.client.demo.DemoApi
+import org.erc3.exercise.adapter.outgoing.rest.client.session.SessionApi
+import org.erc3.exercise.adapter.outgoing.rest.client.tasks.TasksApi
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -18,15 +19,19 @@ import java.util.concurrent.TimeUnit
 class RetrofitConfig(
     private val objectMapper: ObjectMapper,
 ) {
+    @Bean
+    @ConfigurationProperties(prefix = "challenge.erc3.core-api")
+    fun erc3CoreApiProperties(): RestApiClientProperties = RestApiClientProperties()
 
     @Bean
-    @ConfigurationProperties(prefix = "some-api")
-    fun someApiProperties(): RestApiClientProperties = RestApiClientProperties()
+    fun sessionApi(): SessionApi =
+        erc3CoreApiProperties()
+            .let { retrofit(it.baseUrl, it.timeout).create(SessionApi::class.java) }
 
     @Bean
-    fun someApi(): SomeApi =
-        someApiProperties()
-            .let { retrofit(it.baseUrl, it.timeout).create(SomeApi::class.java) }
+    fun tasksApi(): TasksApi =
+        erc3CoreApiProperties()
+            .let { retrofit(it.baseUrl, it.timeout).create(TasksApi::class.java) }
 
     @Bean
     @ConfigurationProperties(prefix = "challenge.erc3.demo-api")

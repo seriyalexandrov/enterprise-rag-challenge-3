@@ -1,5 +1,6 @@
 package org.erc3.exercise.config
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -16,6 +17,7 @@ class ObjectMapperConfig {
         mapper.registerModule(JavaTimeModule())
         mapper.registerModule(KotlinModule.Builder().build())
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
         return mapper
     }
 }

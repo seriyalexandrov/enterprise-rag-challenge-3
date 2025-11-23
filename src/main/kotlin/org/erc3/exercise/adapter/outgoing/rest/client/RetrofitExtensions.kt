@@ -6,12 +6,17 @@ import java.io.IOException
 
 fun <T> Call<T>.executeHttp(): T? =
     try {
+        log.info("Request to ${this.request().url} body=${this.request().body}")
         val response = this.execute()
         when {
-            response.isSuccessful -> response.body()
+            response.isSuccessful -> {
+                log.info("Response ${this.request().url} body=${response.body()}")
+                response.body()
+            }
             response.code() in 400..499 -> {
-                log.error("Request to ${this.request().url} failed with non-recoverable code=${response.code()} body=${response.errorBody()?.string()}")
-                null
+                val error = "Request to ${this.request().url} failed with non-recoverable code=${response.code()} body=${response.errorBody()?.string()}"
+                log.error(error)
+                throw NonRetryableException(error)
             }
             else -> {
                 log.error("Request to ${this.request().url} failed with code=${response.code()} body=${response.errorBody()?.string()}")

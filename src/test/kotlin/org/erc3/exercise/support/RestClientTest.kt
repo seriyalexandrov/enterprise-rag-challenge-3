@@ -1,9 +1,9 @@
 package org.erc3.exercise.support
 
 import org.erc3.exercise.adapter.outgoing.rest.client.RetrofitConfig
-import org.erc3.exercise.adapter.outgoing.rest.client.demobenchmark.DemoApiClient
-import org.erc3.exercise.adapter.outgoing.rest.client.someapi.SomeApiClient
-import org.erc3.exercise.adapter.outgoing.rest.client.someapi.SomeApiMapper
+import org.erc3.exercise.adapter.outgoing.rest.client.demo.DemoApiClient
+import org.erc3.exercise.adapter.outgoing.rest.client.session.SessionApiClient
+import org.erc3.exercise.adapter.outgoing.rest.client.tasks.TasksApiClient
 import org.erc3.exercise.config.ObjectMapperConfig
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
@@ -21,8 +21,8 @@ import org.springframework.test.context.ActiveProfiles
         ObjectMapperConfig::class,
         RetrofitConfig::class,
         DemoApiClient::class,
-        SomeApiClient::class,
-        SomeApiMapper::class,
+        SessionApiClient::class,
+        TasksApiClient::class,
     ],
     webEnvironment = SpringBootTest.WebEnvironment.NONE,
 )
