@@ -1,12 +1,9 @@
 package org.erc3.exercise.adapter.outgoing.rest.client.session
 
-import org.erc3.exercise.adapter.outgoing.rest.client.session.dto.SessionStatusRequest
-import org.erc3.exercise.adapter.outgoing.rest.client.session.dto.SessionStatusResponse
-import org.erc3.exercise.adapter.outgoing.rest.client.session.dto.StartSessionRequest
-import org.erc3.exercise.adapter.outgoing.rest.client.session.dto.StartSessionResponse
-import org.erc3.exercise.adapter.outgoing.rest.client.session.dto.SubmitSessionRequest
-import org.erc3.exercise.adapter.outgoing.rest.client.session.dto.SubmitSessionResponse
 import org.erc3.exercise.adapter.outgoing.rest.client.executeHttp
+import org.erc3.exercise.adapter.outgoing.rest.client.session.dto.*
+import org.erc3.exercise.domain.model.AgentTask
+import org.erc3.exercise.domain.model.Benchmark
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
@@ -34,8 +31,22 @@ class SessionApiClient(
             .executeHttp()
             ?: throw RuntimeException("Failed to start session")
 
-    fun sessionStatus(sessionId: String): SessionStatusResponse? =
-        api.sessionStatus(SessionStatusRequest(sessionId = sessionId)).executeHttp()
+    fun getTasks(sessionId: String): List<AgentTask> =
+        api.sessionStatus(SessionStatusRequest(sessionId = sessionId))
+            .executeHttp()
+            ?.let {
+                val benchmark = Benchmark.of(it.benchmark)
+
+                it.tasks.map { task ->
+                    AgentTask(
+                        benchmark = benchmark,
+                        taskId = task.taskId,
+                        taskName = task.specId,
+                        taskDescription = task.taskText,
+                    )
+                }
+            }
+            ?: emptyList()
 
     fun submitSession(sessionId: String): SubmitSessionResponse? =
         api.submitSession(SubmitSessionRequest(sessionId = sessionId)).executeHttp()

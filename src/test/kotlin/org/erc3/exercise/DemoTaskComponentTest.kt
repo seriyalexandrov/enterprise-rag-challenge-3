@@ -2,10 +2,10 @@ package org.erc3.exercise
 
 import org.erc3.exercise.adapter.outgoing.rest.client.demo.DemoApiClient
 import org.erc3.exercise.adapter.outgoing.rest.client.session.SessionApiClient
-import org.erc3.exercise.adapter.outgoing.rest.client.session.dto.SessionTaskStatus
 import org.erc3.exercise.adapter.outgoing.rest.client.tasks.TasksApiClient
+import org.erc3.exercise.domain.agent.Agent
+import org.erc3.exercise.domain.model.AgentTask
 import org.erc3.exercise.support.ComponentTest
-import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -32,14 +32,12 @@ class DemoTaskComponentTest {
             architecture = "kotlin-agent",
         )
 
-        val tasks = sessionApiClient.sessionStatus(session.sessionId)?.tasks ?: error("Missing session status")
-        assumeTrue(tasks.isNotEmpty()) { "No tasks returned for session ${session.sessionId}" }
-
-        val agent: DemoAgent = StubDemoAgent(demoApiClient)
+        val tasks = sessionApiClient.getTasks(session.sessionId)
+        val agent: Agent = StubDemoAgent(demoApiClient)
 
         tasks.forEach { task ->
-            tasksApiClient.start(taskId = task.taskId)
-            agent.solve(task)
+            tasksApiClient.start(task.taskId)
+            agent.submitTask(task)
             val complete = tasksApiClient.complete(task.taskId)
             println("Task ${task.taskId} completed with status=${complete?.status} score=${complete?.eval?.score}")
             complete?.eval?.logs?.let { println(it) }
@@ -48,16 +46,13 @@ class DemoTaskComponentTest {
         sessionApiClient.submitSession(session.sessionId)
     }
 
-    private interface DemoAgent {
-        fun solve(task: SessionTaskStatus)
-    }
-
     private class StubDemoAgent(
         private val demoApiClient: DemoApiClient,
-    ) : DemoAgent {
-        override fun solve(task: SessionTaskStatus) {
+    ) : Agent {
+
+        override fun submitTask(task: AgentTask) {
             val secret = demoApiClient.getSecret(task.taskId)
-            val answer = when (task.specId) {
+            val answer = when (task.taskName) {
                 "spec1" -> secret
                 "spec2" -> secret.reversed()
                 "spec3" -> return

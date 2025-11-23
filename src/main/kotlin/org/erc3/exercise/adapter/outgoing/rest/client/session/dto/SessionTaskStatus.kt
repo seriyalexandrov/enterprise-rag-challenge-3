@@ -3,14 +3,14 @@ package org.erc3.exercise.adapter.outgoing.rest.client.session.dto
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class SessionTaskStatus(
-    @JsonProperty("task_id")
+    @field:JsonProperty("task_id")
     val taskId: String,
-    @JsonProperty("status")
+    @field:JsonProperty("status")
     val status: String,
-    @JsonProperty("spec_id")
-    val specId: String? = null,
-    @JsonProperty("task_text")
-    val taskText: String? = null,
-    @JsonProperty("score")
+    @field:JsonProperty("spec_id")
+    val specId: String,
+    @field:JsonProperty("task_text")
+    val taskText: String,
+    @field:JsonProperty("score")
     val score: Double? = null,
 )

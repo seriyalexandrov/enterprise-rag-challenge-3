@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <conversionRule conversionWord="clr"
+                    converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <property name="DEFAULT_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"/>
+
+    <appender name="STDOUT_DEFAULT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${DEFAULT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Loud, color-heavy output for Retrofit-related logs only -->
+    <appender name="RETROFIT_LOUD" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%clr(%d{HH:mm:ss.SSS}){red} %clr(%msg){magenta}%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Use the loud appender only for Retrofit client code -->
+    <logger name="org.erc3.exercise.adapter.outgoing.rest.client" level="INFO" additivity="false">
+        <appender-ref ref="RETROFIT_LOUD"/>
+    </logger>
+    <logger name="retrofit2" level="INFO" additivity="false">
+        <appender-ref ref="RETROFIT_LOUD"/>
+    </logger>
+    <logger name="retrofit2.Call" level="INFO" additivity="false">
+        <appender-ref ref="RETROFIT_LOUD"/>
+    </logger>
+
+    <!-- Everything else keeps the default console pattern -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT_DEFAULT"/>
+    </root>
+</configuration>

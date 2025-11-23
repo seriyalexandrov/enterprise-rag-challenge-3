@@ -6,7 +6,7 @@ data class SessionStatusResponse(
     @JsonProperty("status")
     val status: String,
     @JsonProperty("benchmark")
-    val benchmark: String? = null,
+    val benchmark: String,
     @JsonProperty("failed")
     val failed: Int? = null,
     @JsonProperty("new")
